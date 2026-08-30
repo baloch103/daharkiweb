@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="sd" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaharkiWeb - پوڊڪاسٽ</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        header { background: #1a252f; color: #fff; padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: auto; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #2ecc71; }
+        .nav-menu { display: flex; list-style: none; gap: 15px; }
+        .nav-menu a { color: #fff; padding: 8px 12px; border-radius: 4px; transition: 0.3s; }
+        .nav-menu a:hover, .nav-menu a.active { background: #2ecc71; color: #1a252f; font-weight: bold; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .page-title { margin-bottom: 20px; color: #1a252f; border-right: 5px solid #2ecc71; padding-right: 15px; }
+        .podcast-card { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        audio { width: 100%; margin-top: 10px; }
+
+        footer { background: #1a252f; color: #fff; text-align: center; padding: 20px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">DaharkiWeb</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">مائن صفحو</a></li>
+                    <li><a href="science.html">سائنسي معلومات</a></li>
+                    <li><a href="podcast.html" class="active">پوڊڪاسٽ</a></li>
+                    <li><a href="youtube.html">يوٽيوب / لوڪل چينلز</a></li>
+                    <li><a href="news.html">آس پاس جون خبرون</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">پوڊڪاسٽ آڊيو سيريز</h1>
+        
+        <div class="podcast-card">
+            <h3>قسط 1: ٽيڪنالوجي ۽ اسان جو سماج</h3>
+            <p>خاص گفتگو مھمان سان گڏ.</p>
+            <audio controls>
+                <source src="audio1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div class="podcast-card">
+            <h3>قسط 2: تعليم جو مستقبل</h3>
+            <p>تعليمي ميدان ۾ انوويشن ۽ نوان لاڙا.</p>
+            <audio controls>
+                <source src="audio2.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 <strong>DaharkiWeb</strong>. سڀئي حق محفوظ آهن.</p>
+    </footer>
+
+</body>
+</html>
