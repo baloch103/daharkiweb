@@ -1,27 +1,46 @@
 <!DOCTYPE html>
-<html lang="sd">
+<html lang="sd" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>News Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DaharkiWeb Admin Panel</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: sans-serif; direction: rtl; padding: 20px; max-width: 600px; margin: auto; }
-    input, textarea, select, button { width: 100%; margin-bottom: 12px; padding: 10px; box-sizing: border-box; }
-    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; direction: rtl; padding: 20px; max-width: 600px; margin: auto; }
+    .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h2 { color: #0f172a; margin-bottom: 20px; text-align: center; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"], textarea, select { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
+    .checkbox-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; cursor: pointer; }
+    button { width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
-  <h2>نئين خبر داخل ڪريو</h2>
-  <input type="text" id="title" placeholder="خبر جي سرخي (Title)">
-  <textarea id="content" rows="5" placeholder="خبر جو تفصيل"></textarea>
-  <select id="category">
-    <option value="local">لوڪل خبرون</option>
-    <option value="international">انٽرنيشنل خبرون</option>
-    <option value="sports">اسپورٽس</option>
-    <option value="trending">تازه ترين</option>
-  </select>
-  <label><input type="checkbox" id="is_trending"> ڇا هيءَ خبر مٿين سلائيڊر ۾ هلائڻي آهي؟</label>
-  <button onclick="publishNews()">خبر پبلش ڪريو</button>
+
+  <div class="card">
+    <h2>DaharkiWeb - نئين خبر پبلش ڪريو</h2>
+    
+    <label for="title">خبر جي سرخي (Title):</label>
+    <input type="text" id="title" placeholder="هتي خبر جي سرخي لکو...">
+
+    <label for="content">خبر جو تفصيل (Content):</label>
+    <textarea id="content" rows="6" placeholder="هتي خبر جو مڪمل تفصيل لکو..."></textarea>
+
+    <label for="category">ڪيٽيگري چونڊيو:</label>
+    <select id="category">
+      <option value="local">لوڪل خبرون</option>
+      <option value="international">انٽرنيشنل خبرون</option>
+      <option value="sports">اسپورٽس</option>
+      <option value="trending">تازه ترين</option>
+    </select>
+
+    <label class="checkbox-container">
+      <input type="checkbox" id="is_trending"> ڇا هيءَ خبر مٿين سلائيڊر (Ticker) ۾ هلائڻي آهي؟
+    </label>
+
+    <button onclick="publishNews()" id="btn">خبر شايع ڪريو</button>
+  </div>
 
   <script>
     const SUPABASE_URL = 'https://hhywazbkgalioqqpuhyz.supabase.co';
@@ -29,19 +48,35 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function publishNews() {
-      const title = document.getElementById('title').value;
-      const content = document.getElementById('content').value;
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
       const category = document.getElementById('category').value;
       const is_trending = document.getElementById('is_trending').checked;
+      const btn = document.getElementById('btn');
+
+      if (!title || !content) {
+        alert('مهرباني ڪري سرخي ۽ تفصيل ٻئي داخل ڪريو.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "شايع ٿي رهي آهي...";
 
       const { data, error } = await _supabase
         .from('news')
         .insert([{ title, content, category, is_trending }]);
 
-      if (error) alert('خرابي: ' + error.message);
-      else {
-        alert('خبر کاميابي سان پبلش ٿي وئي!');
-        location.reload();
+      if (error) {
+        alert('خرابي: ' + error.message);
+        btn.disabled = false;
+        btn.innerText = "خبر شايع ڪريو";
+      } else {
+        alert('خبر کاميابي سان شايع ٿي وئي!');
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        document.getElementById('is_trending').checked = false;
+        btn.disabled = false;
+        btn.innerText = "خبر شايع ڪريو";
       }
     }
   </script>
