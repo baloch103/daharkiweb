@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>رابطو - DaharkiWeb</title>
+  <title>لوڪل خبرون - DaharkiWeb</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f6f9; color: #333; }
@@ -14,18 +15,54 @@
     nav a { color: #f8fafc; padding: 14px 20px; text-decoration: none; font-size: 16px; font-weight: bold; transition: background 0.3s; }
     nav a:hover, nav a.active { background-color: #38bdf8; color: #0f172a; }
     
-    .container { max-width: 700px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    h2 { color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; }
+    /* کاٻي پاسي ھلندڙ مٿيون پٽو (Left Marquee) */
+    .news-ticker-container { background: #ef4444; color: white; display: flex; align-items: center; overflow: hidden; font-weight: bold; }
+    .ticker-title { background: #991b1b; padding: 10px 20px; white-space: nowrap; z-index: 2; }
+    .ticker-marquee { white-space: nowrap; overflow: hidden; box-sizing: border-box; width: 100%; }
+    .ticker-text { display: inline-block; padding-left: 100%; animation: marquee-left 25s linear infinite; }
     
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #334155; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 15px; }
-    .form-group textarea { height: 120px; resize: vertical; }
+    @keyframes marquee-left { 
+      0% { transform: translate(-100%, 0); } 
+      100% { transform: translate(100%, 0); } 
+    }
+
+    .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
+    .content-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .section-header { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a; }
     
-    .btn-submit { background-color: #38bdf8; color: #0f172a; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
-    .btn-submit:hover { background-color: #0284c7; color: white; }
+    /* لوڪل خبرن جو تصويري ۽ متن وارو لائيٽ آئوٽ */
+    .news-card { display: flex; gap: 15px; border-bottom: 1px solid #e2e8f0; padding: 15px 0; align-items: flex-start; }
+    .news-card:last-child { border-bottom: none; }
+    .news-card-img-container { 
+      width: 130px; 
+      height: 110px; 
+      background-color: #f1f5f9; 
+      border-radius: 6px; 
+      border: 1px solid #cbd5e1; 
+      flex-shrink: 0; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      overflow: hidden; 
+    }
+    .news-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .news-details { flex: 1; }
+    .news-card h3 { color: #1e293b; margin-bottom: 8px; font-size: 18px; }
+    .news-card p { color: #334155; line-height: 1.7; font-size: 15px; white-space: pre-line; }
+
+    .news-date { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+    .history-card { padding: 10px 0; border-bottom: 1px dashed #cbd5e1; }
+    .history-card h4 { font-size: 14px; color: #334155; }
     
-    footer { background: #0f172a; color: #94a3b8; padding: 20px; text-align: center; margin-top: 50px; }
+    footer { background: #0f172a; color: #94a3b8; padding: 30px 5% 15px 5%; margin-top: 40px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
+    .footer-info h3 { color: #38bdf8; margin-bottom: 10px; }
+    .social-links a { display: inline-block; color: #fff; background: #1e293b; padding: 8px 15px; margin-left: 10px; border-radius: 4px; text-decoration: none; font-size: 14px; transition: background 0.3s; }
+    .social-links a.fb:hover { background: #1877f2; }
+    .social-links a.yt:hover { background: #ff0000; }
+    .footer-bottom { text-align: center; padding-top: 15px; font-size: 14px; }
+    .published-tag { background: #1e293b; color: #38bdf8; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -33,45 +70,127 @@
   <header>
     <div class="top-bar">
       <a href="index.html" class="brand-logo">DaharkiWeb</a>
+      <span class="published-tag">Published Science 2005</span>
     </div>
     <nav>
       <a href="index.html">پھريون صفو</a>
       <a href="science.html">سائنس</a>
       <a href="technology.html">ٽيڪنالوجي</a>
-      <a href="local.html">لوڪل خبرون</a>
+      <a href="local.html" class="active">لوڪل خبرون</a>
       <a href="international.html">انٽرنيشنل</a>
       <a href="sports.html">اسپورٽس</a>
       <a href="trending.html">تازه ترين</a>
-      <a href="contact.html" class="active">رابطو</a>
+      <a href="contact.html">رابطو</a>
     </nav>
   </header>
 
-  <div class="container">
-    <h2>اسان سان رابطو ڪريو</h2>
-    <form onsubmit="alert('توهان جو پيغام موصول ٿي ويو آهي! مهرباني.'); return false;">
-      <div class="form-group">
-        <label>توهان جو نالو:</label>
-        <input type="text" placeholder="نالو داخل ڪريو..." required>
+  <div class="news-ticker-container">
+    <div class="ticker-title">تازه ترين خبرون</div>
+    <div class="ticker-marquee">
+      <div class="ticker-text" id="top-slider">خبرون لوڊ ٿي رهيون آهن...</div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <main>
+      <div class="content-box">
+        <h2 class="section-header">لوڪل (مقامي) خبرون</h2>
+        <div id="local-news-list">خبرون لوڊ ٿي رهيون آهن...</div>
       </div>
-      <div class="form-group">
-        <label>اي ميل ائڊريس:</label>
-        <input type="email" placeholder="example@email.com" required>
+    </main>
+
+    <aside>
+      <div class="content-box">
+        <h3 class="section-header">خبرن جي هسٽري (آرڪائيو)</h3>
+        <div id="history-news">پراڻيون خبرون لوڊ ٿي رهيون آهن...</div>
       </div>
-      <div class="form-group">
-        <label>موضوع (Subject):</label>
-        <input type="text" placeholder="موضوع لکو..." required>
-      </div>
-      <div class="form-group">
-        <label>پيغام:</label>
-        <textarea placeholder="توهان جو پيغام..." required></textarea>
-      </div>
-      <button type="submit" class="btn-submit">پيغام موڪليو</button>
-    </form>
+    </aside>
   </div>
 
   <footer>
-    <p>&copy; 2026 DaharkiWeb. All Rights Reserved | Published Science 2005</p>
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>DaharkiWeb</h3>
+        <p>سائنسي معلومات، تازه ترين خبرون ۽ مقامي معلومات جو مرڪز.</p>
+      </div>
+      <div class="social-links">
+        <h4>اسان سان جوڙيو:</h4>
+        <a href="https://www.facebook.com/daharkiweb" target="_blank" class="fb">Facebook Page</a>
+        <a href="https://www.youtube.com/@Rolakyoun" target="_blank" class="yt">YouTube Channel</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 DaharkiWeb. All Rights Reserved | Published Science 2005</p>
+    </div>
   </footer>
 
+  <script>
+    const SUPABASE_URL = 'https://hhywazbkgalioqqpuhyz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadLocalNews() {
+      // 1. مٿئين سلائيڊر لاءِ خبرون
+      const { data: sliderData } = await _supabase
+        .from('news')
+        .select('title')
+        .eq('is_trending', true)
+        .order('created_at', { ascending: false });
+      
+      if(sliderData && sliderData.length > 0) {
+        document.getElementById('top-slider').innerText = sliderData.map(n => n.title).join('  ||  ');
+      } else {
+        document.getElementById('top-slider').innerText = "DaharkiWeb تي ڀليڪار!";
+      }
+
+      // 2. رڳو لوڪل (local) زمري جون خبرون لوڊ ڪرڻ
+      const { data: localNews } = await _supabase
+        .from('news')
+        .select('*')
+        .eq('category', 'local')
+        .order('created_at', { ascending: false });
+
+      if(localNews && localNews.length > 0) {
+        document.getElementById('local-news-list').innerHTML = localNews.map(n => {
+          const cardImgHtml = (n.image_url && n.image_url !== 'null') 
+            ? `<div class="news-card-img-container"><img src="${n.image_url}" alt="news image" onerror="this.parentNode.style.display='none'"></div>` 
+            : '';
+
+          return `
+            <div class="news-card">
+              ${cardImgHtml}
+              <div class="news-details">
+                <h3>${n.title}</h3>
+                <p>${n.content}</p>
+                <div class="news-date">شايع ٿيل: ${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        document.getElementById('local-news-list').innerHTML = "<p>هن وقت ڪابه لوڪل خبر موجود ناهي.</p>";
+      }
+
+      // 3. هسٽري (آرڪائيو)
+      const { data: historyData } = await _supabase
+        .from('news')
+        .select('title, created_at')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if(historyData && historyData.length > 0) {
+        document.getElementById('history-news').innerHTML = historyData.map(n => `
+          <div class="history-card">
+            <h4>${n.title}</h4>
+            <div class="news-date">${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
+          </div>
+        `).join('');
+      } else {
+        document.getElementById('history-news').innerHTML = "<p>ڪابه هسٽري موجود ناهي.</p>";
+      }
+    }
+
+    loadLocalNews();
+  </script>
 </body>
 </html>
