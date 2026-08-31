@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="sd" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رابطو - DaharkiWeb</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; }
+    header { background-color: #1a252f; color: #fff; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #0f172a; }
+    .brand-logo { font-size: 24px; font-weight: bold; color: #38bdf8; text-decoration: none; }
+    nav { background: #1e293b; display: flex; flex-wrap: wrap; padding: 0 5%; }
+    nav a { color: #f8fafc; padding: 14px 20px; text-decoration: none; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+    nav a:hover, nav a.active { background-color: #38bdf8; color: #0f172a; }
+    
+    .container { max-width: 700px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    h2 { color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #334155; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 15px; }
+    .form-group textarea { height: 120px; resize: vertical; }
+    
+    .btn-submit { background-color: #38bdf8; color: #0f172a; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+    .btn-submit:hover { background-color: #0284c7; color: white; }
+    
+    footer { background: #0f172a; color: #94a3b8; padding: 20px; text-align: center; margin-top: 50px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+      <a href="index.html" class="brand-logo">DaharkiWeb</a>
+    </div>
+    <nav>
+      <a href="index.html">پھريون صفو</a>
+      <a href="science.html">سائنس</a>
+      <a href="technology.html">ٽيڪنالوجي</a>
+      <a href="local.html">لوڪل خبرون</a>
+      <a href="international.html">انٽرنيشنل</a>
+      <a href="sports.html">اسپورٽس</a>
+      <a href="trending.html">تازه ترين</a>
+      <a href="contact.html" class="active">رابطو</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>اسان سان رابطو ڪريو</h2>
+    <form onsubmit="alert('توهان جو پيغام موصول ٿي ويو آهي! مهرباني.'); return false;">
+      <div class="form-group">
+        <label>توهان جو نالو:</label>
+        <input type="text" placeholder="نالو داخل ڪريو..." required>
+      </div>
+      <div class="form-group">
+        <label>اي ميل ائڊريس:</label>
+        <input type="email" placeholder="example@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>موضوع (Subject):</label>
+        <input type="text" placeholder="موضوع لکو..." required>
+      </div>
+      <div class="form-group">
+        <label>پيغام:</label>
+        <textarea placeholder="توهان جو پيغام..." required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">پيغام موڪليو</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DaharkiWeb. All Rights Reserved | Published Science 2005</p>
+  </footer>
+
+</body>
+</html>
