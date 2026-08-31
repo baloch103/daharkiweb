@@ -10,7 +10,7 @@
     .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     h2 { color: #0f172a; margin-bottom: 20px; text-align: center; }
     label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input[type="text"], textarea, select { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
+    input[type="text"], input[type="file"], textarea, select { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
     .checkbox-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; cursor: pointer; }
     button { width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
     button:hover { background: #0056b3; }
@@ -26,6 +26,10 @@
 
     <label for="content">خبر جو تفصيل (Content):</label>
     <textarea id="content" rows="6" placeholder="هتي خبر جو مڪمل تفصيل لکو..."></textarea>
+
+    <!-- تصوير جو آپشن -->
+    <label for="image_file">تصوير چونڊيو (Image File):</label>
+    <input type="file" id="image_file" accept="image/*">
 
     <label for="category">ڪيٽيگري چونڊيو:</label>
     <select id="category">
@@ -52,6 +56,7 @@
       const content = document.getElementById('content').value.trim();
       const category = document.getElementById('category').value;
       const is_trending = document.getElementById('is_trending').checked;
+      const imageFile = document.getElementById('image_file').files[0];
       const btn = document.getElementById('btn');
 
       if (!title || !content) {
@@ -60,24 +65,51 @@
       }
 
       btn.disabled = true;
-      btn.innerText = "شايع ٿي رهي آهي...";
+      btn.innerText = "تصوير ۽ خبر آپلوڊ ٿي رهي آهي...";
 
+      let image_url = null;
+
+      // تصوير اپلوڊ ڪرڻ جو پروسيس
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { data: uploadData, error: uploadError } = await _supabase.storage
+          .from('news-images')
+          .upload(filePath, imageFile);
+
+        if (uploadError) {
+          alert('تصوير اپلوڊ ڪرڻ ۾ مسئلو آيو: ' + uploadError.message);
+          btn.disabled = false;
+          btn.innerText = "خبر شايع ڪريو";
+          return;
+        }
+
+        const { data: publicUrlData } = _supabase.storage
+          .from('news-images')
+          .getPublicUrl(filePath);
+
+        image_url = publicUrlData.publicUrl;
+      }
+
+      // ڊيٽابيس ۾ خبر داخل ڪرڻ
       const { data, error } = await _supabase
         .from('news')
-        .insert([{ title, content, category, is_trending }]);
+        .insert([{ title, content, category, is_trending, image_url }]);
 
       if (error) {
         alert('خرابي: ' + error.message);
-        btn.disabled = false;
-        btn.innerText = "خبر شايع ڪريو";
       } else {
-        alert('خبر کاميابي سان شايع ٿي وئي!');
+        alert('خبر تصوير سان گڏ کاميابي سان شايع ٿي وئي!');
         document.getElementById('title').value = '';
         document.getElementById('content').value = '';
+        document.getElementById('image_file').value = '';
         document.getElementById('is_trending').checked = false;
-        btn.disabled = false;
-        btn.innerText = "خبر شايع ڪريو";
       }
+
+      btn.disabled = false;
+      btn.innerText = "خبر شايع ڪريو";
     }
   </script>
 </body>
