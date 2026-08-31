@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="sd" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ٽيڪنالوجي - DaharkiWeb</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; }
+    header { background-color: #1a252f; color: #fff; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #0f172a; }
+    .brand-logo { font-size: 24px; font-weight: bold; color: #38bdf8; text-decoration: none; }
+    
+    /* Correct Nav Styling */
+    nav { background: #1e293b; display: flex; flex-wrap: wrap; padding: 0 5%; }
+    nav a { color: #f8fafc; padding: 14px 20px; text-decoration: none; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+    nav a:hover, nav a.active { background-color: #38bdf8; color: #0f172a; }
+    
+    .page-title-banner { background: #0284c7; color: white; padding: 25px 5%; text-align: center; }
+    .page-title-banner h1 { font-size: 28px; margin-bottom: 5px; }
+    .page-title-banner p { font-size: 15px; opacity: 0.9; }
+
+    .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
+    
+    .content-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .section-header { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a; }
+    
+    .news-card { display: flex; gap: 15px; border-bottom: 1px solid #e2e8f0; padding: 15px 0; align-items: flex-start; }
+    .news-card:last-child { border-bottom: none; }
+    .news-card-img-container { width: 130px; height: 100px; background-color: #f1f5f9; border-radius: 6px; border: 1px solid #cbd5e1; flex-shrink: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .news-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .news-details { flex: 1; }
+    .news-card h3 { color: #1e293b; margin-bottom: 8px; font-size: 18px; }
+    .news-card p { color: #475569; line-height: 1.6; font-size: 15px; white-space: pre-line; }
+    .news-date { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+
+    footer { background: #0f172a; color: #94a3b8; padding: 30px 5% 15px 5%; margin-top: 40px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
+    .footer-info h3 { color: #38bdf8; margin-bottom: 10px; }
+    .social-links a { display: inline-block; color: #fff; background: #1e293b; padding: 8px 15px; margin-left: 10px; border-radius: 4px; text-decoration: none; font-size: 14px; transition: background 0.3s; }
+    .social-links a.fb:hover { background: #1877f2; }
+    .social-links a.yt:hover { background: #ff0000; }
+    .footer-bottom { text-align: center; padding-top: 15px; font-size: 14px; }
+    .published-tag { background: #1e293b; color: #38bdf8; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="top-bar">
+      <a href="index.html" class="brand-logo">DaharkiWeb</a>
+      <span class="published-tag">Published Science 2005</span>
+    </div>
+    
+    <!-- Navigation Links (Fix Routing) -->
+    <nav>
+      <a href="index.html">پھريون صفو</a>
+      <a href="science.html">سائنس</a>
+      <a href="technology.html" class="active">ٽيڪنالوجي</a>
+      <a href="local.html">لوڪل خبرون</a>
+      <a href="international.html">انٽرنيشنل</a>
+      <a href="sports.html">اسپورٽس</a>
+      <a href="trending.html">تازه ترين</a>
+      <a href="contact.html">رابطو</a>
+    </nav>
+  </header>
+
+  <!-- Page Banner -->
+  <div class="page-title-banner">
+    <h1>ٽيڪنالوجي جي دنيا (Technology)</h1>
+    <p>موبائيل، ڪمپيوٽر، سسٽم ۽ نيون ٽيڪنالوجيز بابت تازيون خبرون ۽ اپڊيٽس</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <main>
+      <div class="content-box">
+        <h2 class="section-header">ٽيڪنالوجي جون خبرون</h2>
+        <div id="tech-news-list">خبرون لوڊ ٿي رهيون آهن...</div>
+      </div>
+    </main>
+
+    <aside>
+      <div class="content-box">
+        <h3 class="section-header">معلومات</h3>
+        <p style="line-height: 1.6; color: #64748b;">
+          DaharkiWeb جي ٽيڪنالوجي سيڪشن ۾ توهان کي جديد سافٽويئر، هارڊويئر، AI ۽ سمارٽ فونز جي دنيا جون اهم خبرون ملنديون.
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>DaharkiWeb</h3>
+        <p>سائنسي معلومات، تازه ترين خبرون ۽ مقامي معلومات جو مرڪز.</p>
+      </div>
+      <div class="social-links">
+        <h4>اسان سان جوڙيو:</h4>
+        <a href="https://www.facebook.com/daharkiweb" target="_blank" class="fb">Facebook Page</a>
+        <a href="https://www.youtube.com/@Rolakyoun" target="_blank" class="yt">YouTube Channel</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 DaharkiWeb. All Rights Reserved | Published Science 2005</p>
+    </div>
+  </footer>
+
+  <!-- Supabase Script -->
+  <script>
+    const SUPABASE_URL = 'https://hhywazbkgalioqqpuhyz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadTechNews() {
+      // Fetch news where category is 'technology'
+      const { data: newsData, error } = await _supabase
+        .from('news')
+        .select('*')
+        .eq('category', 'technology')
+        .order('created_at', { ascending: false });
+
+      const newsContainer = document.getElementById('tech-news-list');
+
+      if (error) {
+        newsContainer.innerHTML = "<p>خبرون لوڊ ڪرڻ ۾ مسئلو پيش آيو آهي.</p>";
+        console.error(error);
+        return;
+      }
+
+      if (newsData && newsData.length > 0) {
+        newsContainer.innerHTML = newsData.map(n => {
+          const imgHtml = (n.image_url && n.image_url !== 'null') 
+            ? `<div class="news-card-img-container"><img src="${n.image_url}" alt="news image" onerror="this.parentNode.style.display='none'"></div>` 
+            : '';
+
+          return `
+            <div class="news-card">
+              ${imgHtml}
+              <div class="news-details">
+                <h3>${n.title}</h3>
+                <p>${n.content}</p>
+                <div class="news-date">شايع ٿيل: ${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        newsContainer.innerHTML = "<p>هن وقت ٽيڪنالوجي سيڪشن ۾ ڪابه خبر موجود ناهي.</p>";
+      }
+    }
+
+    loadTechNews();
+  </script>
+</body>
+</html>
