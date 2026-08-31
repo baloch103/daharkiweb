@@ -3,47 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DaharkiWeb Admin Panel</title>
+  <title>Admin Panel - DaharkiWeb</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; direction: rtl; padding: 20px; max-width: 600px; margin: auto; }
-    .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h2 { color: #0f172a; margin-bottom: 20px; text-align: center; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input[type="text"], input[type="file"], textarea, select { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; font-size: 15px; }
-    .checkbox-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; cursor: pointer; }
-    button { width: 100%; background: #007bff; color: white; border: none; padding: 12px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-    button:hover { background: #0056b3; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f1f5f9; padding: 20px; color: #333; }
+    .admin-container { max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #38bdf8; padding-bottom: 10px; text-align: center; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; color: #1e293b; }
+    input[type="text"], textarea, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 15px; }
+    textarea { height: 120px; resize: vertical; }
+    .checkbox-group { display: flex; align-items: center; gap: 10px; }
+    .checkbox-group input { width: 18px; height: 18px; }
+    button { width: 100%; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+    button:hover { background: #0369a1; }
+    #status-msg { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; text-align: center; font-weight: bold; }
+    .success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .error { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>DaharkiWeb - نئين خبر پبلش ڪريو</h2>
+  <div class="admin-container">
+    <h2>DaharkiWeb - خبرون داخل ڪريو</h2>
     
-    <label for="title">خبر جي سرخي (Title):</label>
-    <input type="text" id="title" placeholder="هتي خبر جي سرخي لکو...">
+    <form id="add-news-form">
+      <div class="form-group">
+        <label for="title">خبر جو عنوان (Title):</label>
+        <input type="text" id="title" placeholder="خبر جو عنوان لکو..." required>
+      </div>
 
-    <label for="content">خبر جو تفصيل (Content):</label>
-    <textarea id="content" rows="6" placeholder="هتي خبر جو مڪمل تفصيل لکو..."></textarea>
+      <div class="form-group">
+        <label for="category">زمرو (Category) چونڊيو:</label>
+        <select id="category" required>
+          <option value="local">لوڪل خبرون</option>
+          <option value="science">سائنس (Science)</option>
+          <option value="technology">ٽيڪنالوجي (Technology)</option>
+          <option value="international">انٽرنيشنل</option>
+          <option value="sports">اسپورٽس</option>
+          <option value="trending">تازه ترين</option>
+        </select>
+      </div>
 
-    <!-- تصوير جو آپشن -->
-    <label for="image_file">تصوير چونڊيو (Image File):</label>
-    <input type="file" id="image_file" accept="image/*">
+      <div class="form-group">
+        <label for="image_url">تصوير جي لنڪ (Image URL) - آپشنل:</label>
+        <input type="text" id="image_url" placeholder="https://example.com/image.jpg">
+      </div>
 
-    <label for="category">ڪيٽيگري چونڊيو:</label>
-    <select id="category">
-      <option value="local">لوڪل خبرون</option>
-      <option value="international">انٽرنيشنل خبرون</option>
-      <option value="sports">اسپورٽس</option>
-      <option value="trending">تازه ترين</option>
-    </select>
+      <div class="form-group">
+        <label for="content">خبر جو تفصيل (Content):</label>
+        <textarea id="content" placeholder="مڪمل خبر لکو..." required></textarea>
+      </div>
 
-    <label class="checkbox-container">
-      <input type="checkbox" id="is_trending"> ڇا هيءَ خبر مٿين سلائيڊر (Ticker) ۾ هلائڻي آهي؟
-    </label>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="is_trending">
+        <label for="is_trending">شو ڪريو مٿئين تازه ترين پٽي (Ticker) ۾؟</label>
+      </div>
 
-    <button onclick="publishNews()" id="btn">خبر شايع ڪريو</button>
+      <button type="submit" id="submit-btn">خبر پوسٽ ڪريو</button>
+    </form>
+
+    <div id="status-msg"></div>
   </div>
 
   <script>
@@ -51,66 +72,42 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function publishNews() {
-      const title = document.getElementById('title').value.trim();
-      const content = document.getElementById('content').value.trim();
+    document.getElementById('add-news-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submit-btn');
+      const statusMsg = document.getElementById('status-msg');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'پوسٽ ٿي رهي آهي...';
+      statusMsg.style.display = 'none';
+
+      const title = document.getElementById('title').value;
       const category = document.getElementById('category').value;
+      const image_url = document.getElementById('image_url').value || null;
+      const content = document.getElementById('content').value;
       const is_trending = document.getElementById('is_trending').checked;
-      const imageFile = document.getElementById('image_file').files[0];
-      const btn = document.getElementById('btn');
 
-      if (!title || !content) {
-        alert('مهرباني ڪري سرخي ۽ تفصيل ٻئي داخل ڪريو.');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerText = "تصوير ۽ خبر آپلوڊ ٿي رهي آهي...";
-
-      let image_url = null;
-
-      // تصوير اپلوڊ ڪرڻ جو پروسيس
-      if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        const { data: uploadData, error: uploadError } = await _supabase.storage
-          .from('news-images')
-          .upload(filePath, imageFile);
-
-        if (uploadError) {
-          alert('تصوير اپلوڊ ڪرڻ ۾ مسئلو آيو: ' + uploadError.message);
-          btn.disabled = false;
-          btn.innerText = "خبر شايع ڪريو";
-          return;
-        }
-
-        const { data: publicUrlData } = _supabase.storage
-          .from('news-images')
-          .getPublicUrl(filePath);
-
-        image_url = publicUrlData.publicUrl;
-      }
-
-      // ڊيٽابيس ۾ خبر داخل ڪرڻ
       const { data, error } = await _supabase
         .from('news')
-        .insert([{ title, content, category, is_trending, image_url }]);
+        .insert([
+          { title, category, image_url, content, is_trending }
+        ]);
 
       if (error) {
-        alert('خرابي: ' + error.message);
+        statusMsg.className = 'error';
+        statusMsg.innerText = 'غلطي: ' + error.message;
+        statusMsg.style.display = 'block';
       } else {
-        alert('خبر تصوير سان گڏ کاميابي سان شايع ٿي وئي!');
-        document.getElementById('title').value = '';
-        document.getElementById('content').value = '';
-        document.getElementById('image_file').value = '';
-        document.getElementById('is_trending').checked = false;
+        statusMsg.className = 'success';
+        statusMsg.innerText = 'خبر ڪاميابيءَ سان شامل ڪئي وئي!';
+        statusMsg.style.display = 'block';
+        document.getElementById('add-news-form').reset();
       }
 
-      btn.disabled = false;
-      btn.innerText = "خبر شايع ڪريو";
-    }
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'خبر پوسٽ ڪريو';
+    });
   </script>
 </body>
 </html>
