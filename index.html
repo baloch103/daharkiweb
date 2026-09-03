@@ -116,6 +116,48 @@
     .social-links a.yt:hover { background: #ff0000; }
     .footer-bottom { text-align: center; padding-top: 15px; font-size: 14px; }
     .published-tag { background: #1e293b; color: #38bdf8; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+
+    /* Shar WebTech Solutions Ad Styling */
+    .webtech-ad-banner {
+      background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto 10px auto;
+      max-width: 1200px;
+      text-align: center;
+      border: 1px solid #38bdf8;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .webtech-ad-banner::before {
+      content: "PROMO";
+      position: absolute;
+      top: 10px;
+      right: -25px;
+      background: #e11d48;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 25px;
+      transform: rotate(45deg);
+      letter-spacing: 1px;
+    }
+    .webtech-ad-title { font-size: 20px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
+    .webtech-ad-desc { font-size: 14px; color: #e2e8f0; max-width: 800px; margin: 0 auto 15px auto; line-height: 1.6; }
+    .webtech-ad-btn {
+      display: inline-block;
+      background: #38bdf8;
+      color: #0f172a;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .webtech-ad-btn:hover { background: #ffffff; color: #0284c7; transform: translateY(-2px); }
   </style>
 </head>
 <body>
@@ -192,6 +234,16 @@
         <a href="https://www.youtube.com/@Rolakyoun" target="_blank" class="yt">YouTube Channel</a>
       </div>
     </div>
+
+    <!-- Shar WebTech Solutions Advertisement Banner -->
+    <div class="webtech-ad-banner">
+      <div class="webtech-ad-title">🚀 Shar WebTech Solutions</div>
+      <p class="webtech-ad-desc">
+        ڇا توهان پنهنجي بزنس، نيوز پورٽل، يا پرسنل برانڊ لاءِ جديد، تيز رفتار ۽ موبائل فرينڊلي ويب سائيٽ ٺاهڻ چاهيو ٿا؟ اسان کان وٺو اعليٰ معيار جون ويب ڊولپمينٽ سروسز!
+      </p>
+      <a href="services.html" class="webtech-ad-btn">اسان جون خدمتون (Services) ڏسو ➔</a>
+    </div>
+
     <div class="footer-bottom">
       <p>&copy; 2026 DaharkiWeb. All Rights Reserved | Published Science 2005</p>
     </div>
