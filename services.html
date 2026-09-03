@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sd" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shar WebTech Solutions - پرافيشنل ويب ڊولپمينٽ ڪمپني</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
+
+    /* Header & Navigation */
+    header { background: #0f172a; color: #fff; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .logo { font-size: 24px; font-weight: bold; color: #38bdf8; text-decoration: none; }
+    nav a { color: #f8fafc; text-decoration: none; margin-right: 20px; font-weight: 500; transition: color 0.3s; }
+    nav a:hover { color: #38bdf8; }
+
+    /* Hero Section */
+    .hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 80px 5%; text-align: center; }
+    .hero h1 { font-size: 38px; color: #38bdf8; margin-bottom: 15px; }
+    .hero p { font-size: 18px; max-width: 800px; margin: 0 auto 25px auto; color: #cbd5e1; }
+    .btn-primary { background: #0284c7; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block; transition: background 0.3s; }
+    .btn-primary:hover { background: #0369a1; }
+
+    /* Container */
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .section-title { text-align: center; font-size: 28px; color: #0f172a; margin-bottom: 30px; position: relative; }
+    .section-title::after { content: ''; width: 60px; height: 3px; background: #0284c7; display: block; margin: 8px auto 0 auto; border-radius: 2px; }
+
+    /* Services Grid */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .service-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); transition: transform 0.3s; }
+    .service-card:hover { transform: translateY(-5px); }
+    .service-card h3 { color: #0284c7; font-size: 20px; margin-bottom: 10px; }
+    .service-card p { color: #64748b; font-size: 14px; }
+
+    /* Contact Section */
+    .contact-box { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+    @media (max-width: 768px) { .contact-box { grid-template-columns: 1fr; } }
+    
+    .contact-info h3 { color: #0f172a; margin-bottom: 15px; font-size: 22px; }
+    .info-item { margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+    .info-item span { font-weight: bold; color: #0284c7; }
+
+    footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 20px; margin-top: 50px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="#" class="logo">Shar WebTech Solutions</a>
+    <nav>
+      <a href="#about">اسان بابت</a>
+      <a href="#services">خدمتون</a>
+      <a href="#contact">رابطو</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>توهان جي بزنس لاءِ جديد ۽ سمارٽ ويب سائيٽس!</h1>
+    <p>اسان ڏيون ٿا جديد، تيز، موبائل فيس بڪ اٽئچمينٽ، نيووز پورٽلز، ۽ ڪسٽم ويب ايپليڪيشنس تيار ڪري.</p>
+    <a href="#contact" class="btn-primary">اڄ ئي آرڊر ڏيو</a>
+  </section>
+
+  <!-- Services Section -->
+  <div class="container" id="services">
+    <h2 class="section-title">اسان جون خدمتون</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <h3>📰 نيوز ۽ ميڊيا پورٽل</h3>
+        <p>تيز ترين لوڊ ٿيندڙ، نيوز باڪس، پوپ-اپ خبرون، ۽ سوشل ميڊيا اوٽو شيئرنگ سپورٽ سان شاندار خبرن جون ويب سائيٽس.</p>
+      </div>
+      <div class="service-card">
+        <h3>💼 بزنس ۽ برانڊ ويب سائيٽس</h3>
+        <p>توهان جي شاپ، فرنچائز، يا برانڊ لاءِ اعليٰ معيار جي لنڊنگ پيج ۽ سروس ويب سائيٽس.</p>
+      </div>
+      <div class="service-card">
+        <h3>⚡ جديد ويب ايپليڪيشنس</h3>
+        <p>Supabase، لائيٽ ويب سسٽمز، ايڊمن ڊئش بورڊ، ۽ ڪسٽم فورمس سان تيار ڪيل سسٽمز.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="container" id="about">
+    <h2 class="section-title">اسان بابت (تعارف)</h2>
+    <p style="text-align: center; max-width: 800px; margin: 0 auto; color: #475569; font-size: 16px;">
+      **Shar WebTech Solutions** هڪ جديد ويب ڊولپمينٽ سروس آهي. اسان جو مقصد ماڻهن، ادارن، ۽ بزنس کي جديد ترين، خوبصورت ۽ تيز رفتار ويب سائيٽس ٺاهي ڏيڻ آهي. اسان وٽ پورٽل، لوڪل نيوز، ۽ ڪسٽم ايڊمن سسٽم جي ويب ڊزائيننگ جو مڪمل تجربو موجود آهي.
+    </p>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="container" id="contact">
+    <h2 class="section-title">اسان سان رابطو ڪريو</h2>
+    <div class="contact-box">
+      <div class="contact-info">
+        <h3>رابطي جا تفصيل:</h3>
+        <div class="info-item">
+          <span>👤 مالڪ / ڊولپر:</span> علي اڪبر (Ali Akbar)
+        </div>
+        <div class="info-item">
+          <span>📞 فون / واٽس ايپ:</span> +92 336 3152236
+        </div>
+        <div class="info-item">
+          <span>✉️ اي ميل:</span> aliakbarshar@gmail.com
+        </div>
+        <div class="info-item">
+          <span>🌐 ويب پروڊڪٽس:</span> DaharkiWeb & Web Services
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f1f5f9; padding: 20px; border-radius: 8px; text-align: center;">
+        <h4 style="color: #0f172a; margin-bottom: 10px;">واٽس ايپ تي سڌو آرڊر ڏيو:</h4>
+        <a href="https://wa.me/923363152236?text=السلام علیکم! مون کي ويب سائيٽ ٺاهڻي آهي." target="_blank" class="btn-primary" style="background: #25d366;">
+          🟢 WhatsApp تي چئٽ ڪريو
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Shar WebTech Solutions. All Rights Reserved. | Developed by Ali Akbar</p>
+  </footer>
+
+</body>
+</html>
