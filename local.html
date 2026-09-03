@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوڪل خبرون - DaharkiWeb</title>
+  <title>DaharkiWeb - لوڪل خبرون</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -14,47 +14,90 @@
     nav { background: #1e293b; display: flex; flex-wrap: wrap; padding: 0 5%; }
     nav a { color: #f8fafc; padding: 14px 20px; text-decoration: none; font-size: 16px; font-weight: bold; transition: background 0.3s; }
     nav a:hover, nav a.active { background-color: #38bdf8; color: #0f172a; }
-    
-    /* کاٻي پاسي ھلندڙ مٿيون پٽو (Left Marquee) */
-    .news-ticker-container { background: #ef4444; color: white; display: flex; align-items: center; overflow: hidden; font-weight: bold; }
-    .ticker-title { background: #991b1b; padding: 10px 20px; white-space: nowrap; z-index: 2; }
-    .ticker-marquee { white-space: nowrap; overflow: hidden; box-sizing: border-box; width: 100%; }
-    .ticker-text { display: inline-block; padding-left: 100%; animation: marquee-left 25s linear infinite; }
-    
-    @keyframes marquee-left { 
-      0% { transform: translate(-100%, 0); } 
-      100% { transform: translate(100%, 0); } 
-    }
 
     .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
     @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
     .content-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .section-header { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 15px; color: #0f172a; }
-    
-    /* لوڪل خبرن جو تصويري ۽ متن وارو لائيٽ آئوٽ */
-    .news-card { display: flex; gap: 15px; border-bottom: 1px solid #e2e8f0; padding: 15px 0; align-items: flex-start; }
-    .news-card:last-child { border-bottom: none; }
-    .news-card-img-container { 
-      width: 130px; 
-      height: 110px; 
+
+    /* First Featured Full News Styling */
+    .first-featured-news { border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px; overflow: hidden; }
+    .first-featured-news h2 { color: #0f172a; font-size: 22px; margin-bottom: 12px; }
+    .featured-img-box { 
+      float: right; 
+      width: 250px; 
+      max-height: 200px;
+      margin-left: 15px; 
+      margin-bottom: 10px;
       background-color: #f1f5f9; 
-      border-radius: 6px; 
-      border: 1px solid #cbd5e1; 
-      flex-shrink: 0; 
+      border-radius: 8px; 
+      border: 1px solid #cbd5e1;
+      overflow: hidden; 
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      overflow: hidden; 
     }
+    .featured-img-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .first-featured-news p { color: #334155; line-height: 1.8; white-space: pre-line; font-size: 16px; }
+
+    @media (max-width: 480px) {
+      .featured-img-box { float: none; width: 100%; max-height: 250px; margin-left: 0; }
+    }
+
+    /* Secondary News Card Layout with 3 Lines Limit */
+    .news-card { display: flex; gap: 15px; border-bottom: 1px solid #e2e8f0; padding: 15px 0; align-items: flex-start; }
+    .news-card:last-child { border-bottom: none; }
+    .news-card-img-container { width: 110px; height: 100px; background-color: #f1f5f9; border-radius: 6px; border: 1px solid #cbd5e1; flex-shrink: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; }
     .news-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .news-details { flex: 1; }
-    .news-card h3 { color: #1e293b; margin-bottom: 8px; font-size: 18px; }
-    .news-card p { color: #334155; line-height: 1.7; font-size: 15px; white-space: pre-line; }
+    .news-card h3 { color: #1e293b; margin-bottom: 6px; font-size: 17px; }
 
-    .news-date { font-size: 12px; color: #94a3b8; margin-top: 8px; }
-    .history-card { padding: 10px 0; border-bottom: 1px dashed #cbd5e1; }
-    .history-card h4 { font-size: 14px; color: #334155; }
+    /* CSS Clamp to Restrict Content to 3 Lines */
+    .three-lines-text {
+      color: #64748b; 
+      line-height: 1.6; 
+      font-size: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     
+    .read-more-btn { display: inline-block; background: #38bdf8; color: #0f172a; font-weight: bold; padding: 4px 10px; border-radius: 4px; border: none; font-size: 12px; margin-top: 8px; cursor: pointer; transition: background 0.2s; }
+    .read-more-btn:hover { background: #0284c7; color: white; }
+
+    /* Social Share Buttons */
+    .share-container { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .share-btn { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 11px; font-weight: bold; color: white; cursor: pointer; border: none; transition: opacity 0.2s; }
+    .share-btn:hover { opacity: 0.85; }
+    .btn-fb { background-color: #1877f2; }
+    .btn-wa { background-color: #25d366; }
+    .btn-copy { background-color: #64748b; }
+
+    .news-date { font-size: 12px; color: #94a3b8; margin-top: 6px; clear: both; }
+
+    /* Scrollable Sidebar Box (اسڪرول هسٽري باڪس) */
+    .history-scroll-box { max-height: 500px; overflow-y: auto; padding-left: 8px; }
+    .history-scroll-box::-webkit-scrollbar { width: 6px; }
+    .history-scroll-box::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .history-scroll-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .history-scroll-box::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .history-card { padding: 12px 0; border-bottom: 1px dashed #cbd5e1; }
+    .history-card:last-child { border-bottom: none; }
+    .history-card h4 { font-size: 14px; color: #334155; margin-bottom: 5px; line-height: 1.4; }
+
+    /* Pop-up Modal Design */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .modal-content { background: white; width: 100%; max-width: 650px; max-height: 85vh; overflow-y: auto; border-radius: 10px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
+    .modal-close { position: absolute; top: 12px; left: 15px; background: #ef4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; font-weight: bold; }
+    .modal-title { font-size: 20px; color: #0f172a; margin-bottom: 12px; padding-left: 25px; line-height: 1.4; }
+    .modal-img-container { width: 100%; max-height: 300px; background: #f1f5f9; border-radius: 6px; overflow: hidden; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; }
+    .modal-img-container img { width: 100%; height: 100%; object-fit: contain; }
+    .modal-body { color: #334155; font-size: 15px; line-height: 1.8; white-space: pre-line; margin-bottom: 15px; }
+    .modal-date { font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+
     footer { background: #0f172a; color: #94a3b8; padding: 30px 5% 15px 5%; margin-top: 40px; }
     .footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
     .footer-info h3 { color: #38bdf8; margin-bottom: 10px; }
@@ -80,38 +123,56 @@
       <a href="international.html">انٽرنيشنل</a>
       <a href="sports.html">اسپورٽس</a>
       <a href="trending.html">تازه ترين</a>
+      <a href="about.html">اسان بابت</a>
       <a href="contact.html">رابطو</a>
     </nav>
   </header>
 
-  <div class="news-ticker-container">
-    <div class="ticker-title">تازه ترين خبرون</div>
-    <div class="ticker-marquee">
-      <div class="ticker-text" id="top-slider">خبرون لوڊ ٿي رهيون آهن...</div>
-    </div>
-  </div>
-
   <div class="main-container">
+    <!-- Main Content: Local News List -->
     <main>
       <div class="content-box">
-        <h2 class="section-header">لوڪل (مقامي) خبرون</h2>
-        <div id="local-news-list">خبرون لوڊ ٿي رهيون آهن...</div>
+        <h2 class="section-header">لوڪل خبرون 📍</h2>
+        
+        <!-- First Full News -->
+        <div id="first-local-news"></div>
+        
+        <!-- Other 3-Line News -->
+        <div id="secondary-local-news">لوڊ ٿي رهيون آهن...</div>
       </div>
     </main>
 
+    <!-- Sidebar: Older Local News (Scrollable History) -->
     <aside>
       <div class="content-box">
-        <h3 class="section-header">خبرن جي هسٽري (آرڪائيو)</h3>
-        <div id="history-news">پراڻيون خبرون لوڊ ٿي رهيون آهن...</div>
+        <h3 class="section-header">لوڪل آرڪائيو (هسٽري)</h3>
+        <div class="history-scroll-box" id="local-history-list">پراڻيون خبرون لوڊ ٿي رهيون آهن...</div>
       </div>
     </aside>
+  </div>
+
+  <!-- Pop-up Modal for Full News View -->
+  <div class="modal-overlay" id="newsModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeNewsModal()">✕</button>
+      <h2 class="modal-title" id="mTitle"></h2>
+      <div class="modal-img-container" id="mImgBox" style="display:none;">
+        <img id="mImg" src="" alt="news image">
+      </div>
+      <p class="modal-body" id="mContent"></p>
+      
+      <!-- Modal Social Share Buttons -->
+      <div class="share-container" id="mShareBtns"></div>
+
+      <div class="modal-date" id="mDate" style="margin-top:15px;"></div>
+    </div>
   </div>
 
   <footer>
     <div class="footer-content">
       <div class="footer-info">
         <h3>DaharkiWeb</h3>
-        <p>سائنسي معلومات، تازه ترين خبرون ۽ مقامي معلومات جو مرڪز.</p>
+        <p>مقامي ۽ لوڪل خبرون، واقعا ۽ اپڊيٽس.</p>
       </div>
       <div class="social-links">
         <h4>اسان سان جوڙيو:</h4>
@@ -129,64 +190,141 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function loadLocalNews() {
-      // 1. مٿئين سلائيڊر لاءِ خبرون
-      const { data: sliderData } = await _supabase
-        .from('news')
-        .select('title')
-        .eq('is_trending', true)
-        .order('created_at', { ascending: false });
-      
-      if(sliderData && sliderData.length > 0) {
-        document.getElementById('top-slider').innerText = sliderData.map(n => n.title).join('  ||  ');
-      } else {
-        document.getElementById('top-slider').innerText = "DaharkiWeb تي ڀليڪار!";
-      }
+    let globalLocalNews = [];
 
-      // 2. رڳو لوڪل (local) زمري جون خبرون لوڊ ڪرڻ
-      const { data: localNews } = await _supabase
+    // Helper Function to Create Share Buttons
+    function createShareButtons(title) {
+      const pageUrl = encodeURIComponent(window.location.href);
+      const encTitle = encodeURIComponent(title + " - DaharkiWeb Local");
+
+      return `
+        <div class="share-container">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${pageUrl}" target="_blank" class="share-btn btn-fb">
+            📘 فيس بڪ
+          </a>
+          <a href="https://api.whatsapp.com/send?text=${encTitle}%20${pageUrl}" target="_blank" class="share-btn btn-wa">
+            🟢 واٽس ايپ
+          </a>
+          <button onclick="copyPageLink()" class="share-btn btn-copy">
+            🔗 لنڪ ڪاپي
+          </button>
+        </div>
+      `;
+    }
+
+    function copyPageLink() {
+      navigator.clipboard.writeText(window.location.href);
+      alert('خبر جي لنڪ ڪاپي ٿي وئي آهي!');
+    }
+
+    async function loadLocalNews() {
+      // Fetch news where category is local
+      const { data: newsData, error } = await _supabase
         .from('news')
         .select('*')
         .eq('category', 'local')
         .order('created_at', { ascending: false });
 
-      if(localNews && localNews.length > 0) {
-        document.getElementById('local-news-list').innerHTML = localNews.map(n => {
-          const cardImgHtml = (n.image_url && n.image_url !== 'null') 
+      if (error || !newsData || newsData.length === 0) {
+        document.getElementById('first-local-news').innerHTML = "<p>هن وقت ڪابه لوڪل خبر موجود ناهي.</p>";
+        document.getElementById('secondary-local-news').innerHTML = "";
+        document.getElementById('local-history-list').innerHTML = "<p>ڪابه هسٽري موجود ناهي.</p>";
+        return;
+      }
+
+      globalLocalNews = newsData;
+
+      // 1. First Full News (پهرين ڪامل خبر)
+      const first = newsData[0];
+      const firstImgHtml = (first.image_url && first.image_url !== 'null') 
+        ? `<div class="featured-img-box"><img src="${first.image_url}" alt="news image" onerror="this.parentNode.style.display='none'"></div>` 
+        : '';
+
+      document.getElementById('first-local-news').innerHTML = `
+        <div class="first-featured-news">
+          <h2>${first.title}</h2>
+          ${firstImgHtml}
+          <p>${first.content}</p>
+          ${createShareButtons(first.title)}
+          <div class="news-date">شايع ٿيل: ${new Date(first.created_at).toLocaleDateString('sd-PK')}</div>
+        </div>
+      `;
+
+      // 2. Secondary News (3 Lines Max)
+      const secondary = newsData.slice(1, 5);
+      const history = newsData.slice(5);
+
+      if (secondary.length > 0) {
+        document.getElementById('secondary-local-news').innerHTML = secondary.map(n => {
+          const imgHtml = (n.image_url && n.image_url !== 'null') 
             ? `<div class="news-card-img-container"><img src="${n.image_url}" alt="news image" onerror="this.parentNode.style.display='none'"></div>` 
             : '';
 
           return `
             <div class="news-card">
-              ${cardImgHtml}
+              ${imgHtml}
               <div class="news-details">
                 <h3>${n.title}</h3>
-                <p>${n.content}</p>
+                <div class="three-lines-text">${n.content}</div>
+                <button onclick="openNewsModal('${n.id}')" class="read-more-btn">مڪمل خبر پڙهو 📖</button>
+                ${createShareButtons(n.title)}
                 <div class="news-date">شايع ٿيل: ${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
               </div>
             </div>
           `;
         }).join('');
       } else {
-        document.getElementById('local-news-list').innerHTML = "<p>هن وقت ڪابه لوڪل خبر موجود ناهي.</p>";
+        document.getElementById('secondary-local-news').innerHTML = "";
       }
 
-      // 3. هسٽري (آرڪائيو)
-      const { data: historyData } = await _supabase
-        .from('news')
-        .select('title, created_at')
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if(historyData && historyData.length > 0) {
-        document.getElementById('history-news').innerHTML = historyData.map(n => `
-          <div class="history-card">
-            <h4>${n.title}</h4>
-            <div class="news-date">${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
-          </div>
-        `).join('');
+      // 3. History Scrollable List
+      if (history.length > 0) {
+        document.getElementById('local-history-list').innerHTML = history.map(n => {
+          return `
+            <div class="history-card">
+              <h4>${n.title}</h4>
+              <button onclick="openNewsModal('${n.id}')" class="read-more-btn">پڙهو 📖</button>
+              ${createShareButtons(n.title)}
+              <div class="news-date">شايع ٿيل: ${new Date(n.created_at).toLocaleDateString('sd-PK')}</div>
+            </div>
+          `;
+        }).join('');
       } else {
-        document.getElementById('history-news').innerHTML = "<p>ڪابه هسٽري موجود ناهي.</p>";
+        document.getElementById('local-history-list').innerHTML = "<p>پراڻي هسٽري موجود ناهي.</p>";
+      }
+    }
+
+    // Modal Functions
+    function openNewsModal(newsId) {
+      const item = globalLocalNews.find(n => n.id == newsId);
+      if(!item) return;
+
+      document.getElementById('mTitle').innerText = item.title;
+      document.getElementById('mContent').innerText = item.content;
+      document.getElementById('mShareBtns').innerHTML = createShareButtons(item.title);
+      document.getElementById('mDate').innerText = "شايع ٿيل: " + new Date(item.created_at).toLocaleDateString('sd-PK');
+
+      const imgBox = document.getElementById('mImgBox');
+      const imgElem = document.getElementById('mImg');
+
+      if(item.image_url && item.image_url !== 'null') {
+        imgElem.src = item.image_url;
+        imgBox.style.display = 'flex';
+      } else {
+        imgBox.style.display = 'none';
+      }
+
+      document.getElementById('newsModal').style.display = 'flex';
+    }
+
+    function closeNewsModal() {
+      document.getElementById('newsModal').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+      const modal = document.getElementById('newsModal');
+      if (e.target === modal) {
+        modal.style.display = "none";
       }
     }
 
