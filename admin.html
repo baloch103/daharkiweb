@@ -13,6 +13,7 @@
       --border-color: #334155;
       --primary: #2563eb;
       --accent: #ef4444;
+      --success: #10b981;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
@@ -31,7 +32,7 @@
 
     .form-group { margin-bottom: 15px; }
     label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
-    input[type="text"], textarea, select {
+    input[type="text"], input[type="password"], textarea, select {
       width: 100%;
       padding: 10px;
       background: #0f172a;
@@ -54,21 +55,35 @@
       cursor: pointer;
       width: 100%;
       font-size: 16px;
+      transition: background 0.2s;
     }
     .btn:hover { opacity: 0.9; }
 
     /* Login Box */
     #login-section { max-width: 400px; margin: 50px auto; }
     
-    /* News Table */
+    /* News Table Item */
     .news-item-admin {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid var(--border-color);
+      background: #111827;
+      border-radius: 6px;
+      margin-bottom: 8px;
     }
-    .btn-delete { background: var(--accent); padding: 6px 12px; border-radius: 4px; border: none; color: white; cursor: pointer; }
+    .btn-delete { background: var(--accent); padding: 6px 12px; border-radius: 4px; border: none; color: white; cursor: pointer; font-weight: bold; }
+    .btn-delete:hover { background: #dc2626; }
+    
+    .badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #334155;
+      color: #38bdf8;
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -80,7 +95,7 @@
       <h2>🔑 ايڊمن لاگ ان</h2>
       <div class="form-group">
         <label>پاسورڊ درج ڪريو:</label>
-        <input type="password" id="admin-password" placeholder="Passcode...">
+        <input type="password" id="admin-password" placeholder="Passcode لکو...">
       </div>
       <button class="btn" onclick="checkAuth()">لاگ ان ٿيو</button>
     </div>
@@ -90,7 +105,7 @@
 
       <!-- Post News Form -->
       <div class="card">
-        <h2>📝 نئين خبر حاصل / پوسٽ ڪريو</h2>
+        <h2>📝 نئين خبر پبلش ڪريو</h2>
 
         <div class="form-group">
           <label>خبر جي سرخي (Title):</label>
@@ -100,11 +115,11 @@
         <div class="form-group">
           <label>خبر جو ڪيٽيگري:</label>
           <select id="news-category">
-            <option value="local">لوڪل خبرون</option>
-            <option value="science">سائنس</option>
-            <option value="international">انٽرنيشنل</option>
-            <option value="technology">ٽيڪنالوجي</option>
-            <option value="sports">اسپورٽس</option>
+            <option value="local">📍 لوڪل خبرون</option>
+            <option value="science">🧬 سائنس</option>
+            <option value="international">🌍 انٽرنيشنل</option>
+            <option value="technology">💻 ٽيڪنالوجي</option>
+            <option value="sports">⚽ اسپورٽس</option>
           </select>
         </div>
 
@@ -118,26 +133,26 @@
           <input type="text" id="news-image" placeholder="https://example.com/image.jpg">
         </div>
 
-        <!-- 🎥 نئون وڊيو اپشن -->
-        <div class="form-group" style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #3b82f6;">
-          <label style="color: #60a5fa;">🎥 وڊيو ايمبيڊ ڪوڊ / لنڪ (Facebook / YouTube Embed Code):</label>
-          <input type="text" id="news-video" placeholder='<iframe src="..." ...></iframe> يا وڊيو لنڪ'>
-          <small style="color: #94a3b8; font-size: 11px; margin-top: 4px; display: block;">
-            فيس بڪ يا يوٽيوب جو Embed Code هتي پيسٽ ڪريو.
+        <!-- 🎥 وڊيو اپشن (Reels/Videos auto convert) -->
+        <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #3b82f6;">
+          <label style="color: #60a5fa;">🎥 فيس بڪ / يوٽيوب وڊيو يا Reel جو لنڪ:</label>
+          <input type="text" id="news-video" placeholder="مثال: https://www.facebook.com/reel/2154340318797676">
+          <small style="color: #94a3b8; font-size: 11px; margin-top: 5px; display: block;">
+            💡 **نوٽ:** توهان سڌو Facebook Reel، Video Link يا iframe Code پيسٽ ڪري سگهو ٿا.
           </small>
         </div>
 
         <div class="form-group checkbox-group">
           <input type="checkbox" id="news-trending">
-          <label for="news-trending">خاص خبر (Top Slider ticker ۾ شو ڪريو)</label>
+          <label for="news-trending">🔥 خاص خبر (Top Slider Ticker ۾ شو ڪريو)</label>
         </div>
 
-        <button class="btn" onclick="submitNews()">خبر پبلش ڪريو</button>
+        <button class="btn" id="submit-btn" onclick="submitNews()">پبلش ڪريو</button>
       </div>
 
       <!-- Posted News Manage List -->
       <div class="card">
-        <h2>📰 لڳايل خبرن جي لسٽ</h2>
+        <h2>📰 پوئين لڳايل خبرن جي لسٽ</h2>
         <div id="admin-news-list">لوڊ ٿي رهيو آهي...</div>
       </div>
 
@@ -150,30 +165,66 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // سادو لاگ ان سيڪيورٽي پاسورڊ
+    // لاگ ان چيڪ (Default password: admin123)
     function checkAuth() {
       const pass = document.getElementById('admin-password').value;
-      if (pass === 'admin123') { // توهان پنهنجو پسنديده پاسورڊ هتي تبديل ڪري سگهو ٿا
+      if (pass === 'admin123') {
         document.getElementById('login-section').style.display = 'none';
         document.getElementById('dashboard-section').style.display = 'block';
         fetchAdminNews();
       } else {
-        alert('غلط پاسورڊ!');
+        alert('غلط پاسورڊ! مهرباني ڪري درست پاسورڊ لکو.');
       }
     }
 
+    // Facebook / Youtube Normal Link کي Automatic Embed Code ۾ مٽائڻ جو فنڪشن
+    function processVideoInput(input) {
+      if(!input) return null;
+      input = input.trim();
+      
+      // جيڪڏهن پهريان ئي iframe ڪوڊ آهي
+      if (input.includes('<iframe')) return input;
+
+      // جيڪڏهن Facebook Link يا Reel Link آهي
+      if (input.includes('facebook.com')) {
+        const encUrl = encodeURIComponent(input);
+        return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encUrl}&show_text=false" width="100%" height="320" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+      }
+
+      // جيڪڏهن YouTube Link آهي
+      if (input.includes('youtube.com') || input.includes('youtu.be')) {
+        let ytId = '';
+        if(input.includes('v=')) {
+          ytId = input.split('v=')[1].split('&')[0];
+        } else if(input.includes('youtu.be/')) {
+          ytId = input.split('youtu.be/')[1].split('?')[0];
+        }
+        if(ytId) {
+          return `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe>`;
+        }
+      }
+
+      return input;
+    }
+
     async function submitNews() {
-      const title = document.getElementById('news-title').value;
+      const title = document.getElementById('news-title').value.trim();
       const category = document.getElementById('news-category').value;
-      const content = document.getElementById('news-content').value;
-      const imageUrl = document.getElementById('news-image').value;
-      const videoCode = document.getElementById('news-video').value;
+      const content = document.getElementById('news-content').value.trim();
+      const imageUrl = document.getElementById('news-image').value.trim();
+      const rawVideo = document.getElementById('news-video').value.trim();
       const isTrending = document.getElementById('news-trending').checked;
 
       if (!title || !content) {
-        alert('مهرباني ڪري سرخي ۽ مواد لازمی لکو!');
+        alert('مهرباني ڪري خبر جي سرخي ۽ تفصيل لازماً لکو!');
         return;
       }
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.innerText = "پبلش ٿي رهيو آهي...";
+      submitBtn.disabled = true;
+
+      const finalVideoCode = processVideoInput(rawVideo);
 
       const { data, error } = await _supabase.from('news').insert([
         {
@@ -181,16 +232,20 @@
           category: category,
           content: content,
           image_url: imageUrl || null,
-          video_code: videoCode || null, // وڊيو ايمبيڊ ڪوڊ
+          video_code: finalVideoCode,
           is_trending: isTrending
         }
       ]);
+
+      submitBtn.innerText = "پبلش ڪريو";
+      submitBtn.disabled = false;
 
       if (error) {
         alert('خرابي: ' + error.message);
       } else {
         alert('خبر کاميابي سان پوسٽ ٿي وئي!');
-        // فارم صاف ڪريو
+        
+        // Form Reset
         document.getElementById('news-title').value = '';
         document.getElementById('news-content').value = '';
         document.getElementById('news-image').value = '';
@@ -206,7 +261,7 @@
       
       const container = document.getElementById('admin-news-list');
       if(error || !news || news.length === 0) {
-        container.innerHTML = '<p>ڪابه خبر ناهي ملي.</p>';
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center;">ڪابه خبر ناهي ملي.</p>';
         return;
       }
 
@@ -214,8 +269,10 @@
         <div class="news-item-admin">
           <div>
             <strong>${item.title}</strong>
-            <div style="font-size:12px; color:#94a3b8;">
-              ڪيٽيگري: ${item.category} | ${item.video_code ? '📹 وڊيو شامل آهي' : '📷 وڊيو ناهي'}
+            <div style="font-size:12px; color:#94a3b8; margin-top:4px;">
+              <span class="badge">${item.category}</span>
+              ${item.video_code ? '📹 وڊيو شامل آهي' : ''}
+              ${item.is_trending ? '🔥 خاص خبر' : ''}
             </div>
           </div>
           <button class="btn-delete" onclick="deleteNews('${item.id}')">ڊليٽ</button>
