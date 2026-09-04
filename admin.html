@@ -84,9 +84,7 @@
     }
     .btn:hover { opacity: 0.9; }
 
-    /* ---------------------------------------------------- */
-    /* لڳايل خبرن ۽ وڊيوز جي لسٽن لاءِ اسڪرول بار (Scrollbar) */
-    /* ---------------------------------------------------- */
+    /* Scrollable Box for News & Videos */
     .admin-scroll-box {
       max-height: 400px;
       overflow-y: auto;
@@ -97,7 +95,6 @@
     .admin-scroll-box::-webkit-scrollbar { width: 5px; }
     .admin-scroll-box::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
-    /* News Item Admin */
     .news-item-admin {
       display: flex;
       justify-content: space-between;
@@ -146,7 +143,6 @@
         <button class="admin-tab-btn" id="tab-video-btn" onclick="switchAdminTab('video')">🎥 وڊيو جا اوزار</button>
       </div>
 
-      <!-- hidden edit id tracker -->
       <input type="hidden" id="edit-news-id" value="">
 
       <!-- TAB 1: GENERAL NEWS SECTION -->
@@ -189,7 +185,6 @@
           <button class="btn" id="cancel-edit-btn" onclick="resetForm()" style="display:none; background:#64748b; margin-top:8px;">منسوخ ڪريو</button>
         </div>
 
-        <!-- News Manage Scroll Box -->
         <div class="card">
           <h2>📰 لڳايل خبرن جي لسٽ (اسڪرول واري)</h2>
           <div class="admin-scroll-box" id="admin-news-list">لوڊ ٿي رهيو آهي...</div>
@@ -219,7 +214,6 @@
           <button class="btn" id="vid-submit-btn" onclick="submitVideo()" style="background:#10b981;">🎥 وڊيو پبلش ڪريو</button>
         </div>
 
-        <!-- Videos Manage Scroll Box -->
         <div class="card">
           <h2>🎥 لڳايل وڊيوز جي لسٽ (اسڪرول واري)</h2>
           <div class="admin-scroll-box" id="admin-video-list">لوڊ ٿي رهيو آهي...</div>
@@ -263,26 +257,29 @@
       }
     }
 
+    // Refused to Connect Error Fixer Function
     function processVideoInput(input) {
       if(!input) return null;
       input = input.trim();
       if (input.includes('<iframe')) return input;
 
+      // Facebook Reel or Video
       if (input.includes('facebook.com')) {
         const encUrl = encodeURIComponent(input);
-        return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encUrl}&show_text=false" width="100%" height="320" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>`;
+        return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encUrl}&show_text=false" width="100%" height="320" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
       }
 
+      // YouTube Video
       if (input.includes('youtube.com') || input.includes('youtu.be')) {
         let ytId = '';
         if(input.includes('v=')) ytId = input.split('v=')[1].split('&')[0];
         else if(input.includes('youtu.be/')) ytId = input.split('youtu.be/')[1].split('?')[0];
         if(ytId) return `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe>`;
       }
+
       return input;
     }
 
-    // Submit News (Add or Edit)
     async function submitNews() {
       const editId = document.getElementById('edit-news-id').value;
       const title = document.getElementById('news-title').value.trim();
@@ -306,10 +303,8 @@
 
       let res;
       if (editId) {
-        // Update Existing News
         res = await _supabase.from('news').update(payload).eq('id', editId);
       } else {
-        // Insert New News
         res = await _supabase.from('news').insert([payload]);
       }
 
@@ -322,7 +317,6 @@
       }
     }
 
-    // Submit Video Section
     async function submitVideo() {
       const title = document.getElementById('vid-title').value.trim();
       const rawUrl = document.getElementById('vid-url').value.trim();
@@ -360,7 +354,6 @@
       if(error || !news) return;
       allFetchedNews = news;
 
-      // Filter General News vs Videos
       const textNews = news.filter(n => n.category !== 'video');
       const videoNews = news.filter(n => n.category === 'video' || n.video_code);
 
@@ -405,7 +398,6 @@
       }
     }
 
-    // Populate Data for Edit
     function editNews(id) {
       const item = allFetchedNews.find(n => n.id == id);
       if(!item) return;
