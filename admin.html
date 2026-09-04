@@ -3,225 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ایڊمن پينل - DaharkiWeb</title>
+  <title>G ONE WEB - ايڊمن پينل</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f1f5f9; color: #333; padding: 20px; }
-    .admin-card { background: white; padding: 25px; border-radius: 10px; max-width: 900px; margin: 0 auto 30px auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    h2 { color: #0f172a; margin-bottom: 20px; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; }
-    
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; color: #475569; }
-    input, textarea, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; }
-    textarea { height: 120px; resize: vertical; }
-    
-    .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-    .checkbox-group input { width: auto; }
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --border-color: #334155;
+      --primary: #2563eb;
+      --accent: #ef4444;
+    }
 
-    button { background: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: background 0.3s; }
-    button:hover { background: #0369a1; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-color); padding: 20px 10px; }
+    .container { max-width: 700px; margin: 0 auto; }
     
-    /* Edit/Delete Table Styling */
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: right; }
-    th { background: #f8fafc; color: #334155; }
-    tr:nth-child(even) { background: #f8fafc; }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    h2 { margin-bottom: 15px; color: #38bdf8; font-size: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: white;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    textarea { height: 120px; resize: vertical; }
+
+    .checkbox-group { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    /* Login Box */
+    #login-section { max-width: 400px; margin: 50px auto; }
     
-    .btn-action { padding: 6px 12px; font-size: 13px; margin-left: 5px; border-radius: 4px; border: none; cursor: pointer; }
-    .btn-edit { background: #f59e0b; color: white; }
-    .btn-edit:hover { background: #d97706; }
-    .btn-delete { background: #ef4444; color: white; }
-    .btn-delete:hover { background: #dc2626; }
-    .btn-cancel { background: #64748b; color: white; display: none; margin-top: 10px; }
+    /* News Table */
+    .news-item-admin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .btn-delete { background: var(--accent); padding: 6px 12px; border-radius: 4px; border: none; color: white; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <!-- News Form Card (Add/Edit) -->
-  <div class="admin-card">
-    <h2 id="form-heading">نئين خبر شامل ڪريو</h2>
-    <form id="news-form">
-      <!-- Hidden ID field for Edit Mode -->
-      <input type="hidden" id="news-id">
+  <div class="container">
 
+    <!-- Login Form -->
+    <div id="login-section" class="card">
+      <h2>🔑 ايڊمن لاگ ان</h2>
       <div class="form-group">
-        <label for="title">خبر جو عنوان (Title):</label>
-        <input type="text" id="title" required placeholder="عنوان لکو...">
+        <label>پاسورڊ درج ڪريو:</label>
+        <input type="password" id="admin-password" placeholder="Passcode...">
+      </div>
+      <button class="btn" onclick="checkAuth()">لاگ ان ٿيو</button>
+    </div>
+
+    <!-- Main Dashboard Section -->
+    <div id="dashboard-section" style="display:none;">
+
+      <!-- Post News Form -->
+      <div class="card">
+        <h2>📝 نئين خبر حاصل / پوسٽ ڪريو</h2>
+
+        <div class="form-group">
+          <label>خبر جي سرخي (Title):</label>
+          <input type="text" id="news-title" placeholder="هتي سرخي لکو...">
+        </div>
+
+        <div class="form-group">
+          <label>خبر جو ڪيٽيگري:</label>
+          <select id="news-category">
+            <option value="local">لوڪل خبرون</option>
+            <option value="science">سائنس</option>
+            <option value="international">انٽرنيشنل</option>
+            <option value="technology">ٽيڪنالوجي</option>
+            <option value="sports">اسپورٽس</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>خبر جو تفصيل (Content):</label>
+          <textarea id="news-content" placeholder="پوري خبر تفصيل سان لکو..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>تصوير جو لنڪ (Image URL):</label>
+          <input type="text" id="news-image" placeholder="https://example.com/image.jpg">
+        </div>
+
+        <!-- 🎥 نئون وڊيو اپشن -->
+        <div class="form-group" style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #3b82f6;">
+          <label style="color: #60a5fa;">🎥 وڊيو ايمبيڊ ڪوڊ / لنڪ (Facebook / YouTube Embed Code):</label>
+          <input type="text" id="news-video" placeholder='<iframe src="..." ...></iframe> يا وڊيو لنڪ'>
+          <small style="color: #94a3b8; font-size: 11px; margin-top: 4px; display: block;">
+            فيس بڪ يا يوٽيوب جو Embed Code هتي پيسٽ ڪريو.
+          </small>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="news-trending">
+          <label for="news-trending">خاص خبر (Top Slider ticker ۾ شو ڪريو)</label>
+        </div>
+
+        <button class="btn" onclick="submitNews()">خبر پبلش ڪريو</button>
       </div>
 
-      <div class="form-group">
-        <label for="category">ڪيٽيگري (Category):</label>
-        <select id="category" required>
-          <option value="local">لوڪل خبرون (local)</option>
-          <option value="science">سائنسي معلومات (science)</option>
-          <option value="technology">ٽيڪنالوجي (technology)</option>
-          <option value="international">انٽرنيشنل (international)</option>
-          <option value="sports">اسپورٽس (sports)</option>
-        </select>
+      <!-- Posted News Manage List -->
+      <div class="card">
+        <h2>📰 لڳايل خبرن جي لسٽ</h2>
+        <div id="admin-news-list">لوڊ ٿي رهيو آهي...</div>
       </div>
 
-      <div class="form-group">
-        <label for="image_url">تصوير جو لنڪ (Image URL):</label>
-        <input type="text" id="image_url" placeholder="https://example.com/image.jpg">
-      </div>
+    </div>
 
-      <div class="form-group">
-        <label for="content">خبر جو تفصيل (Content):</label>
-        <textarea id="content" required placeholder="پوري خبر تفصيل سان لکو..."></textarea>
-      </div>
-
-      <div class="checkbox-group">
-        <input type="checkbox" id="is_trending">
-        <label for="is_trending" style="margin:0;">ڇا هي خبر مٿئين پٽي (Ticker/Trending) ۾ به هلائڻي آهي؟</label>
-      </div>
-
-      <button type="submit" id="btn-submit">خبر پبلش ڪريو</button>
-      <button type="button" id="btn-cancel" class="btn-cancel" onclick="resetForm()">منسوخ (Cancel)</button>
-    </form>
   </div>
 
-  <!-- News List Card (Manage) -->
-  <div class="admin-card">
-    <h2>پبلش ٿيل خبرن جو انتظام (Manage News)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>عنوان</th>
-          <th>ڪيٽيگري</th>
-          <th>تاريخ</th>
-          <th>عمل (Actions)</th>
-        </tr>
-      </thead>
-      <tbody id="admin-news-table">
-        <tr><td colspan="4" style="text-align:center;">خبرون لوڊ ٿي رهيون آهن...</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Supabase Integration -->
   <script>
     const SUPABASE_URL = 'https://hhywazbkgalioqqpuhyz.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeXdhemJrZ2FsaW9xcXB1aHl6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODE0OTI0MCwiZXhwIjoyMTAzNzI1MjQwfQ.yHHUaGrOn8gKy_1kgujNXupqziJZmQalVIS0F9AU0sY';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // 1. Fetch & Show All News in Table
-    async function fetchAdminNews() {
-      const { data: newsData, error } = await _supabase
-        .from('news')
-        .select('*')
-        .order('created_at', { ascending: false });
+    // سادو لاگ ان سيڪيورٽي پاسورڊ
+    function checkAuth() {
+      const pass = document.getElementById('admin-password').value;
+      if (pass === 'admin123') { // توهان پنهنجو پسنديده پاسورڊ هتي تبديل ڪري سگهو ٿا
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'block';
+        fetchAdminNews();
+      } else {
+        alert('غلط پاسورڊ!');
+      }
+    }
 
-      const tableBody = document.getElementById('admin-news-table');
+    async function submitNews() {
+      const title = document.getElementById('news-title').value;
+      const category = document.getElementById('news-category').value;
+      const content = document.getElementById('news-content').value;
+      const imageUrl = document.getElementById('news-image').value;
+      const videoCode = document.getElementById('news-video').value;
+      const isTrending = document.getElementById('news-trending').checked;
 
-      if (error) {
-        tableBody.innerHTML = '<tr><td colspan="4">خبرون لوڊ ڪرڻ ۾ مسئلو پيش آيو.</td></tr>';
-        console.error(error);
+      if (!title || !content) {
+        alert('مهرباني ڪري سرخي ۽ مواد لازمی لکو!');
         return;
       }
 
-      if (newsData && newsData.length > 0) {
-        tableBody.innerHTML = newsData.map(n => `
-          <tr>
-            <td><strong>${n.title}</strong></td>
-            <td><span style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">${n.category}</span></td>
-            <td>${new Date(n.created_at).toLocaleDateString('sd-PK')}</td>
-            <td>
-              <button class="btn-action btn-edit" onclick="startEdit('${n.id}', \`${encodeURIComponent(n.title)}\`, \`${encodeURIComponent(n.content)}\`, '${n.category}', '${n.image_url || ''}', ${n.is_trending})">ايڊٽ (Edit)</button>
-              <button class="btn-action btn-delete" onclick="deleteNews('${n.id}')">ڊليٽ (Delete)</button>
-            </td>
-          </tr>
-        `).join('');
+      const { data, error } = await _supabase.from('news').insert([
+        {
+          title: title,
+          category: category,
+          content: content,
+          image_url: imageUrl || null,
+          video_code: videoCode || null, // وڊيو ايمبيڊ ڪوڊ
+          is_trending: isTrending
+        }
+      ]);
+
+      if (error) {
+        alert('خرابي: ' + error.message);
       } else {
-        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ڪابه خبر موجود ناهي.</td></tr>';
+        alert('خبر کاميابي سان پوسٽ ٿي وئي!');
+        // فارم صاف ڪريو
+        document.getElementById('news-title').value = '';
+        document.getElementById('news-content').value = '';
+        document.getElementById('news-image').value = '';
+        document.getElementById('news-video').value = '';
+        document.getElementById('news-trending').checked = false;
+        
+        fetchAdminNews();
       }
     }
 
-    // 2. Add or Update News Form Submit
-    document.getElementById('news-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const newsId = document.getElementById('news-id').value;
-      const title = document.getElementById('title').value;
-      const category = document.getElementById('category').value;
-      const image_url = document.getElementById('image_url').value;
-      const content = document.getElementById('content').value;
-      const is_trending = document.getElementById('is_trending').checked;
-
-      if (newsId) {
-        // --- EDIT EXISTING NEWS ---
-        const { error } = await _supabase
-          .from('news')
-          .update({ title, category, image_url, content, is_trending })
-          .eq('id', newsId);
-
-        if (error) {
-          alert('خبر آپڊيٽ نه ٿي سگهي: ' + error.message);
-        } else {
-          alert('خبر ڪاميابيءَ سان آپڊيٽ (Edit) ٿي وئي!');
-          resetForm();
-          fetchAdminNews();
-        }
-      } else {
-        // --- ADD NEW NEWS ---
-        const { error } = await _supabase
-          .from('news')
-          .insert([{ title, category, image_url, content, is_trending }]);
-
-        if (error) {
-          alert('خبر پبلش ڪرڻ ۾ مسئلو آيو: ' + error.message);
-        } else {
-          alert('خبر ڪاميابيءَ سان پبلش ٿي وئي!');
-          resetForm();
-          fetchAdminNews();
-        }
-      }
-    });
-
-    // 3. Fill Form for Edit Mode
-    function startEdit(id, encodedTitle, encodedContent, category, image_url, is_trending) {
-      document.getElementById('news-id').value = id;
-      document.getElementById('title').value = decodeURIComponent(encodedTitle);
-      document.getElementById('content').value = decodeURIComponent(encodedContent);
-      document.getElementById('category').value = category;
-      document.getElementById('image_url').value = (image_url === 'null') ? '' : image_url;
-      document.getElementById('is_trending').checked = is_trending;
-
-      document.getElementById('form-heading').innerText = "خبر ۾ تبديلي (Edit News)";
-      document.getElementById('btn-submit').innerText = "آپڊيٽ ڪريو (Update)";
-      document.getElementById('btn-cancel').style.display = "inline-block";
+    async function fetchAdminNews() {
+      const { data: news, error } = await _supabase.from('news').select('*').order('created_at', { ascending: false });
       
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const container = document.getElementById('admin-news-list');
+      if(error || !news || news.length === 0) {
+        container.innerHTML = '<p>ڪابه خبر ناهي ملي.</p>';
+        return;
+      }
+
+      container.innerHTML = news.map(item => `
+        <div class="news-item-admin">
+          <div>
+            <strong>${item.title}</strong>
+            <div style="font-size:12px; color:#94a3b8;">
+              ڪيٽيگري: ${item.category} | ${item.video_code ? '📹 وڊيو شامل آهي' : '📷 وڊيو ناهي'}
+            </div>
+          </div>
+          <button class="btn-delete" onclick="deleteNews('${item.id}')">ڊليٽ</button>
+        </div>
+      `).join('');
     }
 
-    // 4. Delete News
     async function deleteNews(id) {
-      if (confirm('ڇا توهان يقينن هي خبر ڊليٽ ڪرڻ چاهيو ٿا؟')) {
-        const { error } = await _supabase
-          .from('news')
-          .delete()
-          .eq('id', id);
-
-        if (error) {
-          alert('خبر ڊليٽ نہ ٿي سگهي: ' + error.message);
-        } else {
-          alert('خبر ڊليٽ ٿي وئي!');
+      if(confirm('ڇا توهان يقينن هي خبر ڊليٽ ڪرڻ چاهيو ٿا؟')) {
+        const { error } = await _supabase.from('news').delete().eq('id', id);
+        if(!error) {
           fetchAdminNews();
+        } else {
+          alert('ڊليٽ ڪرڻ ۾ مسألو: ' + error.message);
         }
       }
     }
-
-    // 5. Reset Form to Normal Add Mode
-    function resetForm() {
-      document.getElementById('news-form').reset();
-      document.getElementById('news-id').value = '';
-      document.getElementById('form-heading').innerText = "نئين خبر شامل ڪريو";
-      document.getElementById('btn-submit').innerText = "خبر پبلش ڪريو";
-      document.getElementById('btn-cancel').style.display = "none";
-    }
-
-    // Load News List on Page Load
-    fetchAdminNews();
   </script>
 </body>
 </html>
